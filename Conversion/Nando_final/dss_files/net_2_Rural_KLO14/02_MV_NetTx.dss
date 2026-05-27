@@ -1,0 +1,1 @@
+New Transformer.KLO14 phases=3 windings=2 buses=[SourceBus, mv_f0_n3849] conns=[delta, wye] kVs=[66, 22.7] kVAs=[100000, 100000] %loadloss=0.0001 %noloadloss=0.0001 xhl=0.0001 enabled=true

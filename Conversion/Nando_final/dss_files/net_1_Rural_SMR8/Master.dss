@@ -1,0 +1,20 @@
+Clear
+Set DefaultBaseFrequency=50
+! --- Circuit / source
+Redirect 01_Circuit.dss
+! --- MV network
+Redirect 02_MV_NetTx.dss
+Redirect 03_LineCodes.dss
+Redirect 04_MV_Lines.dss
+Redirect 05_Capacitors.dss
+Redirect 06_Regulators.dss
+! --- LV network
+Redirect 07_LV_Tx.dss
+Redirect 08_LV_Lines.dss
+Redirect 09_LoadShapes.dss
+Redirect 10_Loads.dss
+BusCoords BusCoords.csv
+! --- Post
+Set VoltageBases=[66.0, 22.0, 12.7, 0.400, 0.2309]
+CalcVoltageBases
+Solve

@@ -1,0 +1,105 @@
+============================================================
+3-PHASE LOADING METRICS  (pandapower vs OpenDSS)
+============================================================
+
+── LINES ──
+
+  Phase A:
+    Matched elements : 10949
+    MAE   (%)        : 1.923  (mean over elements)
+    RMSE  (%)        : 2.305
+    Max AE (%)       : 127.231
+    MBE   (%)        : 0.527  (+ = PP overestimates)
+
+  Phase B:
+    Matched elements : 10949
+    MAE   (%)        : 1.609  (mean over elements)
+    RMSE  (%)        : 1.872
+    Max AE (%)       : 131.668
+    MBE   (%)        : -0.167  (+ = PP overestimates)
+
+  Phase C:
+    Matched elements : 10949
+    MAE   (%)        : 1.231  (mean over elements)
+    RMSE  (%)        : 1.369
+    Max AE (%)       : 139.814
+    MBE   (%)        : -0.666  (+ = PP overestimates)
+
+  Top-5 worst (by max_ae) per phase:
+    Phase A:
+      mv_f0_lv617_f0_l0                    mae=102.72%  max_ae=127.23%
+      mv_f0_lv208_f0_l0                    mae= 30.56%  max_ae= 99.67%
+      mv_f0_lv245_f0_l0                    mae= 40.92%  max_ae= 80.54%
+      mv_f0_lv208_f0_l1                    mae= 23.90%  max_ae= 76.64%
+      mv_f0_lv394_f0_l0                    mae= 18.91%  max_ae= 67.31%
+    Phase B:
+      mv_f0_lv617_f0_l0                    mae=107.38%  max_ae=131.67%
+      mv_f0_lv245_f0_l0                    mae= 35.47%  max_ae= 70.08%
+      mv_f0_l37                            mae= 40.75%  max_ae= 56.43%
+      mv_f0_l3590                          mae= 39.54%  max_ae= 53.19%
+      mv_f0_l3201                          mae= 37.70%  max_ae= 50.42%
+    Phase C:
+      mv_f0_lv617_f0_l0                    mae=116.69%  max_ae=139.81%
+      mv_f0_l37                            mae= 42.28%  max_ae= 59.11%
+      mv_f0_l3590                          mae= 41.17%  max_ae= 54.71%
+      mv_f0_l3201                          mae= 39.78%  max_ae= 52.80%
+      mv_f0_l3211                          mae= 40.41%  max_ae= 52.80%
+
+── TRAFOS ──
+
+  Phase A:
+    Matched elements : 254
+    MAE   (%)        : 27.018  (mean over elements)
+    RMSE  (%)        : 30.417
+    Max AE (%)       : 794.521
+    MBE   (%)        : 25.847  (+ = PP overestimates)
+
+  Phase B:
+    Matched elements : 254
+    MAE   (%)        : 29.460  (mean over elements)
+    RMSE  (%)        : 32.607
+    Max AE (%)       : 1119.279
+    MBE   (%)        : 28.567  (+ = PP overestimates)
+
+  Phase C:
+    Matched elements : 254
+    MAE   (%)        : 20.632  (mean over elements)
+    RMSE  (%)        : 23.199
+    Max AE (%)       : 1663.619
+    MBE   (%)        : 19.471  (+ = PP overestimates)
+
+  Top-5 worst (by max_ae) per phase:
+    Phase A:
+      mv_f0_lv_nagambie_153                mae=423.04%  max_ae=794.52%
+      mv_f0_lv_bush_pea_12                 mae=408.54%  max_ae=664.52%
+      mv_f0_lv_o_neill_30                  mae=338.75%  max_ae=657.63%
+      mv_f0_lv_bailieston_east_12          mae=286.87%  max_ae=548.74%
+      mv_f0_lv_henlauren                   mae=210.18%  max_ae=396.25%
+    Phase B:
+      mv_f0_lv_o_neill_30                  mae=616.45%  max_ae=1119.28%
+      mv_f0_lv_blackwood_park_27           mae=560.16%  max_ae=997.76%
+      mv_f0_lv_bailieston_east_12          mae=553.65%  max_ae=950.41%
+      mv_f0_lv_bush_pea_12                 mae=318.31%  max_ae=602.51%
+      mv_f0_lv_bush_pea_5                  mae=281.24%  max_ae=538.75%
+    Phase C:
+      mv_f0_lv_blackwood_park_27           mae=945.84%  max_ae=1663.62%
+      mv_f0_lv_o_neill_30                  mae=476.36%  max_ae=887.08%
+      mv_f0_lv_nagambie_374                mae=299.81%  max_ae=560.85%
+      mv_f0_lv_bailieston_east_12          mae=275.15%  max_ae=446.23%
+      mv_f0_lv_nagambie_153                mae=171.57%  max_ae=344.65%
+
+============================================================
+
+NOTE – Single-phase transformers excluded from comparison:
+  242 trafos with HV winding line-to-line (no neutral)
+  225 trafos with HV winding Wye (1-phase pole-top, phase-to-neutral)
+  Both categories are excluded because pandapower's runpp_3ph models all
+  transformers as 3-phase Dyn.  L-L trafos produce wrong sequence decomposition;
+  1-phase Yy trafos get only a phase-A load, causing solver divergence (>1000%).
+  L-L list : dss_trafo_line_to_line_names.csv
+  Yy list  : dss_trafo_1ph_yy_names.csv
+
+NOTE – normamps correction:
+  For 1-phase trafos, DSS normamps = S/V (no sqrt(3)).
+  The DSS reference divides normamps by sqrt(3) to match pandapower's base.
+============================================================

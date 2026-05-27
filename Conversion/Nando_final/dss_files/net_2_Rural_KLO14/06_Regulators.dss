@@ -1,0 +1,49 @@
+Set MaxControlIter=100
+! regulator_kva=PLENTY_VLY_RISE 200
+New Reactor.Jumper_PLENTY_VLY_RISE_A_E phases=1 bus1=mv_f0_n1609.1 bus2=Jumper_PLENTY_VLY_RISE_A.2 X=0.0001 R=0.0001
+New Reactor.Jumper_PLENTY_VLY_RISE_A_O phases=1 bus1=Jumper_PLENTY_VLY_RISE_A.1 bus2=mv_f0_n2385.1 X=0.0001 R=0.0001
+New Reactor.Jumper_PLENTY_VLY_RISE_B_E phases=1 bus1=mv_f0_n1609.2 bus2=Jumper_PLENTY_VLY_RISE_B.2 X=0.0001 R=0.0001
+New Reactor.Jumper_PLENTY_VLY_RISE_B_O phases=1 bus1=Jumper_PLENTY_VLY_RISE_B.1 bus2=mv_f0_n2385.2 X=0.0001 R=0.0001
+New Reactor.Jumper_PLENTY_VLY_RISE_C_E phases=1 bus1=mv_f0_n1609.3 bus2=Jumper_PLENTY_VLY_RISE_C.2 X=0.0001 R=0.0001
+New Reactor.Jumper_PLENTY_VLY_RISE_C_O phases=1 bus1=Jumper_PLENTY_VLY_RISE_C.1 bus2=mv_f0_n2385.3 X=0.0001 R=0.0001
+New Transformer.PLENTY_VLY_RISE_A phases=1 windings=2 xhl=1 %noloadloss=0.001 %loadloss=0.001 wdg=1 Bus=Jumper_PLENTY_VLY_RISE_A.1.0 kV=12.7 kVA=2.0 wdg=2 Bus=Jumper_PLENTY_VLY_RISE_A.1.2 kV=1.27 kVA=2.0 Maxtap=1.0 Mintap=-1.0 tap=0.0 numtaps=0
+New Regcontrol.Reg_PLENTY_VLY_RISE_A transformer=PLENTY_VLY_RISE_A winding=2 bus=Jumper_PLENTY_VLY_RISE_A.1 vreg=100.0 band=3.0 ptratio=127.0 maxtapchange=1
+New Transformer.PLENTY_VLY_RISE_B phases=1 windings=2 xhl=1 %noloadloss=0.001 %loadloss=0.001 wdg=1 Bus=Jumper_PLENTY_VLY_RISE_B.1.0 kV=12.7 kVA=2.0 wdg=2 Bus=Jumper_PLENTY_VLY_RISE_B.1.2 kV=1.27 kVA=2.0 Maxtap=1.0 Mintap=-1.0 tap=0.0 numtaps=0
+New Regcontrol.Reg_PLENTY_VLY_RISE_B transformer=PLENTY_VLY_RISE_B winding=2 bus=Jumper_PLENTY_VLY_RISE_B.1 vreg=100.0 band=3.0 ptratio=127.0 maxtapchange=1
+New Transformer.PLENTY_VLY_RISE_C phases=1 windings=2 xhl=1 %noloadloss=0.001 %loadloss=0.001 wdg=1 Bus=Jumper_PLENTY_VLY_RISE_C.1.0 kV=12.7 kVA=2.0 wdg=2 Bus=Jumper_PLENTY_VLY_RISE_C.1.2 kV=1.27 kVA=2.0 Maxtap=1.0 Mintap=-1.0 tap=0.0 numtaps=0
+New Regcontrol.Reg_PLENTY_VLY_RISE_C transformer=PLENTY_VLY_RISE_C winding=2 bus=Jumper_PLENTY_VLY_RISE_C.1 vreg=100.0 band=3.0 ptratio=127.0 maxtapchange=1
+New Transformer.EDEN_PARK_STH_ISO buses=[mv_f0_n1252.3.2 mv_f0_n1778.1.0 mv_f0_n1778.0.2] phases=1 windings=3 conns=[Delta Wye Wye] kVs=[22 12.7 12.7] kVAs=[100 100 100] xhl=1 %noloadloss=0.001 %loadloss=0.001
+New Transformer.TWELTH_AVE_ISO buses=[mv_f0_n246.3.1 mv_f0_n2589.1.0 mv_f0_n2589.0.2] phases=1 windings=3 conns=[Delta Wye Wye] kVs=[22 12.7 12.7] kVAs=[100 100 100] xhl=1 %noloadloss=0.001 %loadloss=0.001
+New Transformer.EDEN_PARK_NORTH_ISO buses=[mv_f0_n1172.2.3 mv_f0_n3852.1.0 mv_f0_n3852.0.2] phases=1 windings=3 conns=[Delta Wye Wye] kVs=[22 12.7 12.7] kVAs=[100 100 100] xhl=1 %noloadloss=0.001 %loadloss=0.001
+New Transformer.NINTH_AVE_ISO buses=[mv_f0_n3017.2.1 mv_f0_n1504.1.0 mv_f0_n1504.0.2] phases=1 windings=3 conns=[Delta Wye Wye] kVs=[22 12.7 12.7] kVAs=[100 100 100] xhl=1 %noloadloss=0.001 %loadloss=0.001
+New Transformer.UPPER_PLENTY_STH_ISO buses=[mv_f0_n1575.1.3 mv_f0_n1292.1.0 mv_f0_n1292.0.2] phases=1 windings=3 conns=[Delta Wye Wye] kVs=[22 12.7 12.7] kVAs=[200 200 200] xhl=1 %noloadloss=0.001 %loadloss=0.001
+Set MaxControlIter=100
+! regulator_kva=MERRIANG_JANNA_REG 5000
+New Reactor.Jumper_MERRIANG_JANNA_REG_A_E phases=1 bus1=mv_f0_n3584.1 bus2=Jumper_MERRIANG_JANNA_REG_A.2 X=0.0001 R=0.0001
+New Reactor.Jumper_MERRIANG_JANNA_REG_A_O phases=1 bus1=Jumper_MERRIANG_JANNA_REG_A.1 bus2=mv_f0_n3557.1 X=0.0001 R=0.0001
+New Reactor.Jumper_MERRIANG_JANNA_REG_B_E phases=1 bus1=mv_f0_n3584.2 bus2=Jumper_MERRIANG_JANNA_REG_B.2 X=0.0001 R=0.0001
+New Reactor.Jumper_MERRIANG_JANNA_REG_B_O phases=1 bus1=Jumper_MERRIANG_JANNA_REG_B.1 bus2=mv_f0_n3557.2 X=0.0001 R=0.0001
+New Reactor.Jumper_MERRIANG_JANNA_REG_C_E phases=1 bus1=mv_f0_n3584.3 bus2=Jumper_MERRIANG_JANNA_REG_C.2 X=0.0001 R=0.0001
+New Reactor.Jumper_MERRIANG_JANNA_REG_C_O phases=1 bus1=Jumper_MERRIANG_JANNA_REG_C.1 bus2=mv_f0_n3557.3 X=0.0001 R=0.0001
+New Transformer.MERRIANG_JANNA_REG_A phases=1 windings=2 xhl=1 %noloadloss=0.001 %loadloss=0.001 wdg=1 Bus=Jumper_MERRIANG_JANNA_REG_A.1.0 kV=12.7 kVA=2.0 wdg=2 Bus=Jumper_MERRIANG_JANNA_REG_A.1.2 kV=1.27 kVA=2.0 Maxtap=1.0 Mintap=-1.0 tap=0.0 numtaps=16
+New Regcontrol.Reg_MERRIANG_JANNA_REG_A transformer=MERRIANG_JANNA_REG_A winding=2 bus=Jumper_MERRIANG_JANNA_REG_A.1 vreg=100.0 band=3.0 ptratio=127.0 maxtapchange=1
+New Transformer.MERRIANG_JANNA_REG_B phases=1 windings=2 xhl=1 %noloadloss=0.001 %loadloss=0.001 wdg=1 Bus=Jumper_MERRIANG_JANNA_REG_B.1.0 kV=12.7 kVA=2.0 wdg=2 Bus=Jumper_MERRIANG_JANNA_REG_B.1.2 kV=1.27 kVA=2.0 Maxtap=1.0 Mintap=-1.0 tap=0.0 numtaps=16
+New Regcontrol.Reg_MERRIANG_JANNA_REG_B transformer=MERRIANG_JANNA_REG_B winding=2 bus=Jumper_MERRIANG_JANNA_REG_B.1 vreg=100.0 band=3.0 ptratio=127.0 maxtapchange=1
+New Transformer.MERRIANG_JANNA_REG_C phases=1 windings=2 xhl=1 %noloadloss=0.001 %loadloss=0.001 wdg=1 Bus=Jumper_MERRIANG_JANNA_REG_C.1.0 kV=12.7 kVA=2.0 wdg=2 Bus=Jumper_MERRIANG_JANNA_REG_C.1.2 kV=1.27 kVA=2.0 Maxtap=1.0 Mintap=-1.0 tap=0.0 numtaps=16
+New Regcontrol.Reg_MERRIANG_JANNA_REG_C transformer=MERRIANG_JANNA_REG_C winding=2 bus=Jumper_MERRIANG_JANNA_REG_C.1 vreg=100.0 band=3.0 ptratio=127.0 maxtapchange=1
+New Transformer.UPPER_PLENTY_ISO buses=[mv_f0_n2564.1.3 mv_f0_n2618.1.0 mv_f0_n2618.0.2] phases=1 windings=3 conns=[Delta Wye Wye] kVs=[22 12.7 12.7] kVAs=[100 100 100] xhl=1 %noloadloss=0.001 %loadloss=0.001
+Set MaxControlIter=100
+! regulator_kva=DONNYBROOK_RD_REG 10000
+New Reactor.Jumper_DONNYBROOK_RD_REG_A_E phases=1 bus1=mv_f0_n783.1 bus2=Jumper_DONNYBROOK_RD_REG_A.2 X=0.0001 R=0.0001
+New Reactor.Jumper_DONNYBROOK_RD_REG_A_O phases=1 bus1=Jumper_DONNYBROOK_RD_REG_A.1 bus2=mv_f0_n741.1 X=0.0001 R=0.0001
+New Reactor.Jumper_DONNYBROOK_RD_REG_B_E phases=1 bus1=mv_f0_n783.2 bus2=Jumper_DONNYBROOK_RD_REG_B.2 X=0.0001 R=0.0001
+New Reactor.Jumper_DONNYBROOK_RD_REG_B_O phases=1 bus1=Jumper_DONNYBROOK_RD_REG_B.1 bus2=mv_f0_n741.2 X=0.0001 R=0.0001
+New Reactor.Jumper_DONNYBROOK_RD_REG_C_E phases=1 bus1=mv_f0_n783.3 bus2=Jumper_DONNYBROOK_RD_REG_C.2 X=0.0001 R=0.0001
+New Reactor.Jumper_DONNYBROOK_RD_REG_C_O phases=1 bus1=Jumper_DONNYBROOK_RD_REG_C.1 bus2=mv_f0_n741.3 X=0.0001 R=0.0001
+New Transformer.DONNYBROOK_RD_REG_A phases=1 windings=2 xhl=1 %noloadloss=0.001 %loadloss=0.001 wdg=1 Bus=Jumper_DONNYBROOK_RD_REG_A.1.0 kV=12.7 kVA=2.0 wdg=2 Bus=Jumper_DONNYBROOK_RD_REG_A.1.2 kV=1.27 kVA=2.0 Maxtap=1.0 Mintap=-1.0 tap=0.0 numtaps=16
+New Regcontrol.Reg_DONNYBROOK_RD_REG_A transformer=DONNYBROOK_RD_REG_A winding=2 bus=Jumper_DONNYBROOK_RD_REG_A.1 vreg=100.0 band=3.0 ptratio=127.0 maxtapchange=1
+New Transformer.DONNYBROOK_RD_REG_B phases=1 windings=2 xhl=1 %noloadloss=0.001 %loadloss=0.001 wdg=1 Bus=Jumper_DONNYBROOK_RD_REG_B.1.0 kV=12.7 kVA=2.0 wdg=2 Bus=Jumper_DONNYBROOK_RD_REG_B.1.2 kV=1.27 kVA=2.0 Maxtap=1.0 Mintap=-1.0 tap=0.0 numtaps=16
+New Regcontrol.Reg_DONNYBROOK_RD_REG_B transformer=DONNYBROOK_RD_REG_B winding=2 bus=Jumper_DONNYBROOK_RD_REG_B.1 vreg=100.0 band=3.0 ptratio=127.0 maxtapchange=1
+New Transformer.DONNYBROOK_RD_REG_C phases=1 windings=2 xhl=1 %noloadloss=0.001 %loadloss=0.001 wdg=1 Bus=Jumper_DONNYBROOK_RD_REG_C.1.0 kV=12.7 kVA=2.0 wdg=2 Bus=Jumper_DONNYBROOK_RD_REG_C.1.2 kV=1.27 kVA=2.0 Maxtap=1.0 Mintap=-1.0 tap=0.0 numtaps=16
+New Regcontrol.Reg_DONNYBROOK_RD_REG_C transformer=DONNYBROOK_RD_REG_C winding=2 bus=Jumper_DONNYBROOK_RD_REG_C.1 vreg=100.0 band=3.0 ptratio=127.0 maxtapchange=1
+New Transformer.FOURTEENTH_AVE_ISO buses=[mv_f0_n4.3.1 mv_f0_n1950.1.0 mv_f0_n1950.0.2] phases=1 windings=3 conns=[Delta Wye Wye] kVs=[22 12.7 12.7] kVAs=[100 100 100] xhl=1 %noloadloss=0.001 %loadloss=0.001

@@ -1,0 +1,12 @@
+Matched (bus, phase) pairs : 29833
+Total comparison points    : 1431984
+Global MAPE  % : 4.873717
+Global Max   % : 35.520262
+Global Bias  % : 0.118011
+
+Per-phase averages:
+       MAPE_%   Max_%  MeanSigned_%
+phase                              
+A      5.4537  9.3688       -1.6380
+B      4.7280  7.4383        0.6520
+C      4.2417  6.4691        1.9254

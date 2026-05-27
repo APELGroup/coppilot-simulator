@@ -1,0 +1,1 @@
+New Transformer.CRE21 phases=3 windings=2 buses=[SourceBus, mv_f0_n111] conns=[wye, wye] kVs=[66, 22] kVAs=[15000, 15000] %loadloss=0.0001 %noloadloss=0.0001 xhl=0.0001 enabled=true

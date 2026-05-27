@@ -1,0 +1,3 @@
+! Selected day 15 -> January 15 (Summer)
+New Circuit.Circuit basekv=66 pu=1 angle=0 phases=3 R1=0.52824 X1=2.113 R0=0.59157 X0=1.7747
+Edit Vsource.Source bus1=sourcebus basekv=66 pu=1 angle=0 phases=3 R1=0.52824 X1=2.113 R0=0.59157 X0=1.7

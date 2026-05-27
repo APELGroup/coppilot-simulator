@@ -1,0 +1,13 @@
+simbench-backend/data/results/
+nando/Nando_final/results/
+.claude/
+
+**/node_modules/
+**/.venv/
+**/venv/
+**/__pycache__/
+**/dist/
+**/build/
+**/.pytest_cache/
+*.pyc
+*.log
