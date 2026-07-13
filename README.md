@@ -138,6 +138,72 @@ No manual setup is required beyond the Backend dependencies.
 
 ---
 
+## 5 — Kubernetes Deployment (Helm)
+
+The `helm-chart/` folder deploys the whole stack (PostgreSQL, backend, frontend) to a Kubernetes cluster.
+
+### Prerequisites
+
+| Tool | Notes |
+|---|---|
+| Helm 3 | `helm version` |
+| A reachable Kubernetes cluster | `kubectl cluster-info` |
+| A container registry the cluster can pull from | e.g. Harbor — see below |
+
+### Build and push the images
+
+Backend build context is the **repo root** (it needs the sibling `Conversion/` folder — see `Backend/Dockerfile`). Frontend build context is the `Frontend/` folder itself.
+
+```bash
+docker build -f Backend/Dockerfile  -t <registry>/simulator/backend:1.0  .
+docker build -f Frontend/Dockerfile -t <registry>/simulator/frontend:1.0 Frontend
+
+docker push <registry>/simulator/backend:1.0
+docker push <registry>/simulator/frontend:1.0
+```
+
+> If the registry is only reachable over plain HTTP, both the local Docker daemon (`insecure-registries` in its config) **and** every cluster node's containerd (`/etc/rancher/k3s/registries.yaml` for k3s) need to be configured for it — these are two separate configs.
+
+### Configure `values.yaml`
+
+Point `backend.image` / `frontend.image` at whatever you just pushed, and set real credentials:
+
+```yaml
+backend:
+  image:
+    repository: <registry>/simulator/backend
+    tag: "1.0"
+  jwtSecretKey: "<generate your own — don't ship the default>"
+
+frontend:
+  image:
+    repository: <registry>/simulator/frontend
+    tag: "1.0"
+```
+
+`backend.service.nodePort` / `frontend.service.nodePort` (defaults `30800` / `30300`) are how the browser reaches the app — NodePorts are **cluster-wide**, not per-namespace, so a second install anywhere on the same cluster needs different values here (`--set backend.service.nodePort=... --set frontend.service.nodePort=...`). The frontend derives the backend's URL automatically from whatever host the browser used plus this port — no IP is hardcoded anywhere in the chart.
+
+### Install
+
+```bash
+kubectl create namespace dtlab
+helm install dtlab ./helm-chart -n dtlab
+```
+
+- Frontend: `http://<any-node-ip>:<frontend nodePort>`
+- Backend docs: `http://<any-node-ip>:<backend nodePort>/docs`
+
+An initContainer seeds the backend's persistent volume with the image's default network data on first run only (PVCs, unlike Docker named volumes, start empty rather than inheriting the image's files).
+
+### Upgrade / uninstall
+
+```bash
+helm upgrade dtlab ./helm-chart -n dtlab
+helm uninstall dtlab -n dtlab
+```
+
+---
+
 ## Quick Start
 
 ```
