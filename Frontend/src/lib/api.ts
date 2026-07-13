@@ -1,7 +1,20 @@
 import type { Network } from "@/lib/mock-data";
 import { getToken, clearToken } from "@/lib/auth";
 
-export const API_BASE =  "http://127.0.0.1:8000";
+declare global {
+  interface Window {
+    // Written by docker-entrypoint.sh into dist/client/runtime-config.js at
+    // container startup — lets the backend URL be set per-deployment
+    // (e.g. via Helm values) without rebuilding the image. See
+    // Frontend/Dockerfile and src/routes/__root.tsx (the <script> tag that
+    // loads this before the app bundle runs).
+    __RUNTIME_CONFIG__?: { apiBaseUrl?: string };
+  }
+}
+
+const runtimeApiBase = typeof window !== "undefined" ? window.__RUNTIME_CONFIG__?.apiBaseUrl : undefined;
+
+export const API_BASE = runtimeApiBase || import.meta.env.VITE_API_BASE_URL || "http://127.0.0.1:8000";
 
 // ── Central fetch wrapper ─────────────────────────────────────────────────────
 // Injects Authorization: Bearer <token> into every request.
