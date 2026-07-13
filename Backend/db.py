@@ -9,6 +9,7 @@ running in filesystem-only mode — existing behaviour is fully preserved.
 import json
 import logging
 import os
+import time
 from datetime import datetime
 from pathlib import Path
 
@@ -134,8 +135,21 @@ def init_db() -> bool:
 
     try:
         _engine = create_engine(url, pool_pre_ping=True, echo=False)
-        with _engine.connect() as conn:
-            conn.execute(text("SELECT 1"))   # verify reachability
+        # In containerized deployments the DB may still be starting (or the
+        # orchestrator's DNS may not have the hostname registered yet) right
+        # when this process boots. Retry briefly instead of permanently
+        # falling back to filesystem mode over a transient startup race.
+        retries, delay_seconds = 10, 2
+        for attempt in range(1, retries + 1):
+            try:
+                with _engine.connect() as conn:
+                    conn.execute(text("SELECT 1"))   # verify reachability
+                break
+            except (OperationalError, SQLAlchemyError) as exc:
+                if attempt == retries:
+                    raise
+                logger.info("PostgreSQL not ready yet (attempt %d/%d): %s", attempt, retries, exc)
+                time.sleep(delay_seconds)
         Base.metadata.create_all(_engine)
         _Session = sessionmaker(bind=_engine)
         # ── Column migrations (safe to run on every startup) ──────────────
