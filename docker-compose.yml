@@ -1,0 +1,55 @@
+services:
+  postgres:
+    image: postgres:16
+    environment:
+      POSTGRES_USER: simbench
+      POSTGRES_PASSWORD: simbench
+      POSTGRES_DB: simbench
+    volumes:
+      - dtlab-postgres-data:/var/lib/postgresql/data
+    ports:
+      - "5433:5432" # host 5433 avoids clashing with a native postgres on 5432
+
+  backend:
+    build:
+      context: .
+      dockerfile: Backend/Dockerfile
+    env_file:
+      - Backend/.env
+    environment:
+      # Overrides the host-facing DATABASE_URL in Backend/.env with the
+      # in-network address (compose service name, default postgres port).
+      DATABASE_URL: postgresql+psycopg2://simbench:simbench@postgres:5432/simbench
+    volumes:
+      # Simulation results and generated plots are written here at runtime
+      # (see Backend/main.py: RESULTS_DIR, PLOTS_DIR). Without this volume
+      # they live only in the container's writable layer and vanish on every
+      # rebuild/recreate. First run seeds the volume from the image's
+      # pre-baked data/ (networks.json, sample plots, etc); later image
+      # updates to data/ won't propagate once the volume exists.
+      - dtlab-backend-data:/app/Backend/data
+    ports:
+      - "8000:8000"
+    depends_on:
+      postgres:
+        condition: service_started
+
+  frontend:
+    build:
+      context: Frontend
+      dockerfile: Dockerfile
+    environment:
+      # The frontend derives the backend URL from whatever hostname the
+      # browser used to reach it, plus this port (see resolveApiBaseUrl()
+      # in Frontend/src/routes/__root.tsx) — matches the "8000:8000" host
+      # mapping on the backend service below.
+      BACKEND_PORT: "8000"
+    ports:
+      - "3000:3000"
+    depends_on:
+      backend:
+        condition: service_started
+
+volumes:
+  dtlab-postgres-data:
+  dtlab-backend-data:

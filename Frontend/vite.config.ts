@@ -6,4 +6,10 @@
 // You can pass additional config via defineConfig({ vite: { ... } }) if needed.
 import { defineConfig } from "@lovable.dev/vite-tanstack-config";
 
-export default defineConfig();
+// Outside the Lovable sandbox, `npm run build` skips the Cloudflare/nitro deploy
+// plugin entirely (see @lovable.dev/vite-tanstack-config), producing a bare fetch
+// handler that nothing can serve. Docker builds set DOCKER_BUILD=1 to opt into
+// Nitro's node-server preset, which emits a self-hosting Node server instead.
+export default defineConfig(
+  process.env.DOCKER_BUILD === "1" ? { nitro: { preset: "node-server" } } : {},
+);
