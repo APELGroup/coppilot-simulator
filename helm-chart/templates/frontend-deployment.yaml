@@ -1,0 +1,50 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose convert -f docker-compose.yml
+    kompose.version: 1.37.0 (fb0539e64)
+  labels:
+    io.kompose.service: frontend
+  name: frontend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: frontend
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: kompose convert -f docker-compose.yml
+        kompose.version: 1.37.0 (fb0539e64)
+      labels:
+        io.kompose.service: frontend
+    spec:
+      containers:
+        - image: "{{ .Values.frontend.image.repository }}:{{ .Values.frontend.image.tag }}"
+          name: frontend
+          env:
+            # The frontend derives the backend URL from whatever hostname
+            # the browser used to reach it (see resolveApiBaseUrl() in
+            # src/routes/__root.tsx) plus this port — no IP hardcoded
+            # anywhere in the chart.
+            - name: BACKEND_PORT
+              value: {{ .Values.backend.service.nodePort | quote }}
+          ports:
+            - containerPort: 3000
+              protocol: TCP
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 3000
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            timeoutSeconds: 5
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 3000
+            initialDelaySeconds: 15
+            periodSeconds: 15
+            timeoutSeconds: 5
+      restartPolicy: Always

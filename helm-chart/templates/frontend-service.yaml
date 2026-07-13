@@ -1,0 +1,20 @@
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    kompose.cmd: kompose convert -f docker-compose.yml
+    kompose.version: 1.37.0 (fb0539e64)
+  labels:
+    io.kompose.service: frontend
+  name: frontend
+spec:
+  type: NodePort
+  ports:
+    - name: http
+      port: {{ .Values.frontend.service.port }}
+      # The container always listens on 3000 (dist/server/index.mjs's default)
+      # regardless of the external Service port above.
+      targetPort: 3000
+      nodePort: {{ .Values.frontend.service.nodePort }}
+  selector:
+    io.kompose.service: frontend
