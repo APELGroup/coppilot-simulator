@@ -20,8 +20,12 @@ typing_extensions==4.15.0
 annotated-types==0.7.0
 
 # ── Database ───────────────────────────────────────────────────────────────────
+# psycopg2 (source) only — NOT also psycopg2-binary. Both packages install into
+# the same `psycopg2/` module path, so pip would silently overwrite whichever
+# installed first with the other on every install, non-deterministically.
+# The Backend Dockerfile's builder stage installs build-essential + libpq-dev
+# specifically to compile this from source.
 SQLAlchemy==2.0.49
-psycopg2-binary==2.9.12
 psycopg2==2.9.11
 
 # ── Power systems simulation ───────────────────────────────────────────────────

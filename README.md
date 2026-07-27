@@ -63,7 +63,7 @@ Key packages:
 | `LightSim2Grid` | 0.10.3 | Fast power flow solver |
 | `plotly` | 4.14.3 | Interactive topology plots |
 | `SQLAlchemy` | 2.0.49 | Database ORM |
-| `psycopg2-binary` | 2.9.12 | PostgreSQL driver |
+| `psycopg2` | 2.9.11 | PostgreSQL driver |
 | `python-jose` | 3.5.0 | JWT authentication |
 | `numpy` | 1.26.4 | Numerical computing |
 | `pandas` | 2.3.3 | Data processing |
