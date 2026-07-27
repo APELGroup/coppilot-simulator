@@ -1,16 +1,45 @@
+import { createIsomorphicFn } from "@tanstack/react-start";
+import { getRequestHost } from "@tanstack/react-start/server";
 import type { Network } from "@/lib/mock-data";
 import { getToken, clearToken } from "@/lib/auth";
 
 declare global {
   interface Window {
-    // Written by docker-entrypoint.sh into dist/client/runtime-config.js at
-    // container startup — lets the backend URL be set per-deployment
-    // (e.g. via Helm values) without rebuilding the image. See
-    // Frontend/Dockerfile and src/routes/__root.tsx (the <script> tag that
-    // loads this before the app bundle runs).
+    // Injected server-side on each SSR request (see src/routes/__root.tsx,
+    // which calls resolveApiBaseUrl() below and writes the result into an
+    // inline <script> that runs before the app bundle) — lets the backend
+    // URL be set per-deployment (e.g. via Helm values) without rebuilding
+    // the image.
     __RUNTIME_CONFIG__?: { apiBaseUrl?: string };
   }
 }
+
+// The browser reaches the frontend and backend at the same host, on two
+// different fixed ports (NodePorts in K8s, host-mapped ports in
+// docker-compose) — so the backend URL can be derived from whatever
+// hostname the browser used to reach THIS request, instead of hardcoding
+// an environment-specific IP anywhere. BACKEND_PORT is the only thing that
+// needs to be set (Helm values / docker-compose), and it's just a number.
+//
+// Resolves to "" on the client (the browser already knows its own host —
+// see API_BASE below, which reads window.__RUNTIME_CONFIG__ instead) and to
+// a real value on the server, computed fresh per-request so it must be
+// called at render time, not cached in a module-level constant.
+export const resolveApiBaseUrl = createIsomorphicFn()
+  .server((): string => {
+    try {
+      // .hostname already comes back bracketed for IPv6 (e.g. "[::1]"),
+      // unlike .host which would also include the port — don't re-wrap it.
+      const hostname = new URL(`http://${getRequestHost()}`).hostname;
+      const port = process.env.BACKEND_PORT;
+      if (hostname && port) return `http://${hostname}:${port}`;
+    } catch {
+      // Not inside a request context (shouldn't happen during SSR, but
+      // don't take the app down over it).
+    }
+    return "";
+  })
+  .client((): string => "");
 
 const runtimeApiBase = typeof window !== "undefined" ? window.__RUNTIME_CONFIG__?.apiBaseUrl : undefined;
 

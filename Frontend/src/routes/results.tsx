@@ -15,7 +15,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { getAllScenarios } from "@/lib/scenarios-store";
 import { useNetworks } from "@/lib/networks-store";
 import { useRuns } from "@/lib/runs-store";
-import { API_BASE, apiFetch, fetchResultEnvelope, fetchResultColumn, fetchResultPhases, fetchResultPhasesColumn, fetchPfViolations, type EnvelopeResult, type PhasesResult, type PowerFlowViolations } from "@/lib/api";
+import { API_BASE, apiFetch, resolveApiBaseUrl, fetchResultEnvelope, fetchResultColumn, fetchResultPhases, fetchResultPhasesColumn, fetchPfViolations, type EnvelopeResult, type PhasesResult, type PowerFlowViolations } from "@/lib/api";
 import {
   ResponsiveContainer,
   LineChart,
@@ -679,9 +679,18 @@ function NetworkTopology({
   startedAt?: string;
 }) {
   const [failed, setFailed] = useState(false);
+  // API_BASE is a module-level constant resolved once from
+  // window.__RUNTIME_CONFIG__ — correct on the client, but on the server
+  // (where this src also renders, since this component isn't client-only)
+  // that global isn't set yet, so it would silently fall back to
+  // API_BASE's hardcoded default instead of the real per-deployment host.
+  // resolveApiBaseUrl() computes that host fresh from the current request
+  // on the server and returns "" on the client, where API_BASE already has
+  // the right value.
+  const apiBase = resolveApiBaseUrl() || API_BASE;
   // Cache-buster: force the browser to fetch the latest plot HTML on every
   // page visit instead of serving a stale version from its local cache.
-  const src = networkId ? `${API_BASE}/plots/${networkId}.html?v=${Date.now()}` : null;
+  const src = networkId ? `${apiBase}/plots/${networkId}.html?v=${Date.now()}` : null;
 
   useEffect(() => {
     setFailed(false);

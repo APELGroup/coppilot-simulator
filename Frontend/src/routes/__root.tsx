@@ -1,33 +1,11 @@
 import { Outlet, Link, createRootRoute, HeadContent, Scripts, redirect } from "@tanstack/react-router";
-import { createIsomorphicFn } from "@tanstack/react-start";
-import { getRequestHost } from "@tanstack/react-start/server";
 import { useEffect } from "react";
 import { seedScenariosFromBackend } from "@/lib/scenarios-store";
 import { loadUsersFromBackend } from "@/lib/users-store";
 import { getToken, clearToken } from "@/lib/auth";
-import { getMeApi } from "@/lib/api";
+import { getMeApi, resolveApiBaseUrl } from "@/lib/api";
 
 import appCss from "../styles.css?url";
-
-// The browser reaches the frontend and backend at the same host, on two
-// different fixed ports (NodePorts in K8s, host-mapped ports in
-// docker-compose) — so the backend URL can be derived from whatever
-// hostname the browser used to reach THIS request, instead of hardcoding
-// an environment-specific IP anywhere. BACKEND_PORT is the only thing that
-// needs to be set (Helm values / docker-compose), and it's just a number.
-const resolveApiBaseUrl = createIsomorphicFn()
-  .server((): string => {
-    try {
-      const host = getRequestHost().split(":")[0];
-      const port = process.env.BACKEND_PORT;
-      if (host && port) return `http://${host}:${port}`;
-    } catch {
-      // Not inside a request context (shouldn't happen during SSR, but
-      // don't take the app down over it).
-    }
-    return "";
-  })
-  .client((): string => "");
 
 function NotFoundComponent() {
   return (
