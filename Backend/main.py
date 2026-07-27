@@ -44,7 +44,10 @@ from pydantic import BaseModel
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     # Attempt PostgreSQL connection on startup; non-fatal if unavailable.
-    init_db()
+    # Runs in a worker thread because init_db()'s retry loop uses blocking
+    # time.sleep, which would otherwise stall the event loop for the whole
+    # retry window (see DB_CONNECT_RETRIES/DB_CONNECT_RETRY_DELAY in db.py).
+    await asyncio.to_thread(init_db)
     # Seed networks table from JSON file if DB is available and table is empty.
     if DATA_FILE.exists():
         seed_networks_from_file(DATA_FILE)

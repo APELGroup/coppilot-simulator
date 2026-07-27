@@ -139,7 +139,13 @@ def init_db() -> bool:
         # orchestrator's DNS may not have the hostname registered yet) right
         # when this process boots. Retry briefly instead of permanently
         # falling back to filesystem mode over a transient startup race.
-        retries, delay_seconds = 10, 2
+        # Configurable because the same defaults are wrong for local dev:
+        # DATABASE_URL is commonly set in Backend/.env there too, but with no
+        # `docker run postgres` step, so every `uvicorn --reload` restart
+        # would otherwise stall for the full retry budget before falling
+        # back. Lower DB_CONNECT_RETRIES/DB_CONNECT_RETRY_DELAY for that case.
+        retries = int(os.getenv("DB_CONNECT_RETRIES", "10"))
+        delay_seconds = float(os.getenv("DB_CONNECT_RETRY_DELAY", "2"))
         for attempt in range(1, retries + 1):
             try:
                 with _engine.connect() as conn:
