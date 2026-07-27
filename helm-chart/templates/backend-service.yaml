@@ -1,12 +1,10 @@
 apiVersion: v1
 kind: Service
 metadata:
-  annotations:
-    kompose.cmd: kompose convert -f docker-compose.yml
-    kompose.version: 1.37.0 (fb0539e64)
+  name: {{ include "dtlab.fullname" . }}-backend
   labels:
-    io.kompose.service: backend
-  name: backend
+    {{- include "dtlab.labels" . | nindent 4 }}
+    app.kubernetes.io/component: backend
 spec:
   type: NodePort
   ports:
@@ -17,4 +15,4 @@ spec:
       targetPort: 8000
       nodePort: {{ .Values.backend.service.nodePort }}
   selector:
-    io.kompose.service: backend
+    {{- include "dtlab.selectorLabels" (dict "Chart" .Chart "Release" .Release "component" "backend") | nindent 4 }}

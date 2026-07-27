@@ -3,10 +3,10 @@
 postgres:
   image: postgres:16
   user: simbench
-  # NOTE: for a real deployment, don't leave credentials in plain values.yaml —
-  # override with --set postgres.password=... or a separate (untracked)
-  # values file.
-  password: simbench
+  # CHANGEME: must be overridden — via --set postgres.password=... or a
+  # separate (untracked) values file — before installing this chart. It's
+  # stored in a Secret (see templates/secrets.yaml), never a ConfigMap.
+  password: "CHANGEME"
   database: simbench
   service:
     port: 5432
@@ -17,16 +17,22 @@ backend:
   image:
     repository: 192.168.188.204:80/simulator/backend
     tag: "1.0"
+    # The documented release workflow re-pushes the same tag on every
+    # rebuild, so the default IfNotPresent would let nodes keep a stale
+    # cached image indefinitely.
+    pullPolicy: Always
   service:
     port: 8000
     # Fixed so it's predictable (valid NodePort range: 30000-32767) — the
     # browser reaches the backend directly at <any-node-ip>:nodePort.
     nodePort: 30800
   probePath: /docs
-  # Signs JWT auth tokens — must be overridden for anything beyond local/dev use.
-  jwtSecretKey: "f68ce273aa35b4b37e52cf35b4774dd01b4c8c88ccf6249028f33bf8b058928a"
+  # CHANGEME: signs JWT auth tokens — must be overridden for anything beyond
+  # local/dev use. Stored in a Secret (see templates/secrets.yaml).
+  jwtSecretKey: "CHANGEME"
   jwtExpireHours: 24
-  seedUserPassword: "DtLab2025!"
+  # CHANGEME: password assigned to the seeded demo users on first startup.
+  seedUserPassword: "CHANGEME"
   persistence:
     # Backs Backend/data (simulation results, generated plots). ReadWriteOnce,
     # so this only works safely with a single backend replica.
@@ -36,6 +42,8 @@ frontend:
   image:
     repository: 192.168.188.204:80/simulator/frontend
     tag: "1.0"
+    # See backend.image.pullPolicy's comment.
+    pullPolicy: Always
   service:
     port: 3000
     # Fixed so it's predictable — the user points their browser at

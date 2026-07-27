@@ -1,35 +1,33 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  annotations:
-    kompose.cmd: kompose convert -f docker-compose.yml
-    kompose.version: 1.37.0 (fb0539e64)
+  name: {{ include "dtlab.fullname" . }}-postgres
   labels:
-    io.kompose.service: postgres
-  name: postgres
+    {{- include "dtlab.labels" . | nindent 4 }}
+    app.kubernetes.io/component: postgres
 spec:
   replicas: 1
   selector:
     matchLabels:
-      io.kompose.service: postgres
+      {{- include "dtlab.selectorLabels" (dict "Chart" .Chart "Release" .Release "component" "postgres") | nindent 6 }}
   strategy:
     type: Recreate
   template:
     metadata:
-      annotations:
-        kompose.cmd: kompose convert -f docker-compose.yml
-        kompose.version: 1.37.0 (fb0539e64)
       labels:
-        io.kompose.service: postgres
+        {{- include "dtlab.selectorLabels" (dict "Chart" .Chart "Release" .Release "component" "postgres") | nindent 8 }}
     spec:
       containers:
         - env:
             - name: POSTGRES_DB
               value: {{ .Values.postgres.database | quote }}
-            - name: POSTGRES_PASSWORD
-              value: {{ .Values.postgres.password | quote }}
             - name: POSTGRES_USER
               value: {{ .Values.postgres.user | quote }}
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "dtlab.fullname" . }}-secrets
+                  key: POSTGRES_PASSWORD
           image: "{{ .Values.postgres.image }}"
           name: postgres
           ports:
@@ -54,4 +52,4 @@ spec:
       volumes:
         - name: dtlab-postgres-data
           persistentVolumeClaim:
-            claimName: dtlab-postgres-data
+            claimName: {{ include "dtlab.fullname" . }}-postgres-data

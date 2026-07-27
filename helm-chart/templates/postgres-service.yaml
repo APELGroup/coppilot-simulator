@@ -1,16 +1,14 @@
 apiVersion: v1
 kind: Service
 metadata:
-  annotations:
-    kompose.cmd: kompose convert -f docker-compose.yml
-    kompose.version: 1.37.0 (fb0539e64)
+  name: {{ include "dtlab.fullname" . }}-postgres
   labels:
-    io.kompose.service: postgres
-  name: postgres
+    {{- include "dtlab.labels" . | nindent 4 }}
+    app.kubernetes.io/component: postgres
 spec:
   ports:
     - name: postgres
       port: {{ .Values.postgres.service.port }}
       targetPort: 5432
   selector:
-    io.kompose.service: postgres
+    {{- include "dtlab.selectorLabels" (dict "Chart" .Chart "Release" .Release "component" "postgres") | nindent 4 }}

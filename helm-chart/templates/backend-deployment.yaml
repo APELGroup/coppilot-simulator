@@ -1,41 +1,40 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  annotations:
-    kompose.cmd: kompose convert -f docker-compose.yml
-    kompose.version: 1.37.0 (fb0539e64)
+  name: {{ include "dtlab.fullname" . }}-backend
   labels:
-    io.kompose.service: backend
-  name: backend
+    {{- include "dtlab.labels" . | nindent 4 }}
+    app.kubernetes.io/component: backend
 spec:
   replicas: 1
   selector:
     matchLabels:
-      io.kompose.service: backend
+      {{- include "dtlab.selectorLabels" (dict "Chart" .Chart "Release" .Release "component" "backend") | nindent 6 }}
   strategy:
     type: Recreate
   template:
     metadata:
-      annotations:
-        kompose.cmd: kompose convert -f docker-compose.yml
-        kompose.version: 1.37.0 (fb0539e64)
       labels:
-        io.kompose.service: backend
+        {{- include "dtlab.selectorLabels" (dict "Chart" .Chart "Release" .Release "component" "backend") | nindent 8 }}
     spec:
       # Unlike Docker named volumes, a PVC does NOT auto-copy the image's
       # existing directory content on first mount — it just shadows
       # /app/Backend/data with an empty filesystem, hiding the seeded
       # networks.json/networks/plots baked into the image. Seed it once
-      # here (idempotent: only copies if the PVC is still empty), reading
-      # from the same image's un-mounted copy of that data.
+      # here (idempotent: only copies if networks.json isn't present yet),
+      # reading from the same image's un-mounted copy of that data.
+      # NOTE: some volume plugins pre-populate the mount with a directory
+      # such as lost+found, so an "is the directory empty" check would skip
+      # seeding — key off a real data file instead.
       initContainers:
         - name: seed-data
           image: "{{ .Values.backend.image.repository }}:{{ .Values.backend.image.tag }}"
+          imagePullPolicy: {{ .Values.backend.image.pullPolicy }}
           command:
             - sh
             - -c
             - |
-              if [ -z "$(ls -A /mnt/data)" ]; then
+              if [ ! -f /mnt/data/networks.json ]; then
                 echo "Seeding /mnt/data from image defaults..."
                 cp -a /app/Backend/data/. /mnt/data/
               fi
@@ -45,8 +44,11 @@ spec:
       containers:
         - envFrom:
             - configMapRef:
-                name: backend-env
+                name: {{ include "dtlab.fullname" . }}-backend-env
+            - secretRef:
+                name: {{ include "dtlab.fullname" . }}-secrets
           image: "{{ .Values.backend.image.repository }}:{{ .Values.backend.image.tag }}"
+          imagePullPolicy: {{ .Values.backend.image.pullPolicy }}
           name: backend
           ports:
             - containerPort: 8000
@@ -72,4 +74,4 @@ spec:
       volumes:
         - name: dtlab-backend-data
           persistentVolumeClaim:
-            claimName: dtlab-backend-data
+            claimName: {{ include "dtlab.fullname" . }}-backend-data
