@@ -22,6 +22,6 @@ ENV NODE_ENV=production
 COPY --from=build /app/dist ./dist
 
 EXPOSE 3000
-# API_BASE_URL is read live on every SSR request (see src/routes/__root.tsx),
+# BACKEND_PORT is read live on every SSR request (see src/routes/__root.tsx),
 # not baked in at build time — set it per-deployment, e.g. via Helm values.
 CMD ["node", "dist/server/index.mjs"]
