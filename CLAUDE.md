@@ -57,7 +57,7 @@ npm run format     # Prettier
 
 Single `main.py` FastAPI application. No sub-packages — all logic lives in the top-level files:
 
-- **`main.py`** — all route handlers (~2400 lines). SimBench and OpenDSS network endpoints, simulation runs, auth, users, scenarios, edge devices, WebSocket telemetry.
+- **`main.py`** — all route handlers (~2400 lines). SimBench and OpenDSS network endpoints, simulation runs, auth, users, scenarios, edge devices, WebSocket telemetry. Routes are grouped under `# ===== ... =====` comment markers — run `grep -n '^# =====' Backend/main.py` for a table of contents.
 - **`db.py`** — optional PostgreSQL via SQLAlchemy. Every function returns `None`/`False` when the DB is unreachable; the app then falls back to `data/networks.json` on disk. Models: `NetworkRecord`, `SimulationRun`, `ScenarioRecord`, `UserRecord`, `EdgeDevice`, `EdgeNode`, `TelemetryReading`, `ValidationMetrics`.
 - **`auth_utils.py`** — JWT creation/validation (`python-jose`), bcrypt password hashing, `get_current_user` / `require_admin` FastAPI dependencies.
 - **`generate_networks.py`** — Plotly topology rendering helpers (`style_traces`, `build_plot_html`, `COLORS`, `compute_min_height`).

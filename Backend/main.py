@@ -40,6 +40,20 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse
 from pydantic import BaseModel
 
+# -----------------------------------------------------------------------------
+# This file holds every route handler for the service — no sub-packages (see
+# CLAUDE.md). Routes are grouped under "# ===== ... =====" markers below;
+# `grep -n '^# =====' main.py` lists them in file order:
+#   OpenDSS Conversion & Simulation Routes  — /convert/opendss*, run-opendss, run-powerflow, pf-plot, pf-violations
+#   Auth Routes                             — /auth/*
+#   Scenario Routes                         — /scenarios*
+#   User Management Routes                  — /users*
+#   Run & Network Listing Routes            — /runs*, /networks* (list/detail/delete), /
+#   SimBench Simulation & Result Routes     — /networks/{id}/run, vm-pu, line-loading, trafo-loading, envelope, phases*, column*
+#   Edge Device Routes                      — /devices*
+#   Edge Node / Flexibility Routes          — /edge-nodes*
+# -----------------------------------------------------------------------------
+
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -665,6 +679,7 @@ def _generate_opendss_plot(network_id: str, net_xlsx: Path, net_json: Path, mode
         return None, 0
 
 
+# ===== OpenDSS Conversion & Simulation Routes =====
 @app.post("/convert/opendss")
 def convert_opendss(request: ConvertOpenDSSRequest, _cu: dict = Depends(get_current_user)):
     """
@@ -1409,6 +1424,7 @@ def get_pf_violations(network_id: str, run_id: str, _cu: dict = Depends(get_curr
 
 # ── Auth endpoints (public — no Depends(get_current_user)) ───────────────────
 
+# ===== Auth Routes =====
 @app.post("/auth/login")
 def login(request: LoginRequest):
     if not db_available():
@@ -1486,6 +1502,7 @@ def change_password(
 
 # ── Scenario endpoints ────────────────────────────────────────────────────────
 
+# ===== Scenario Routes =====
 @app.get("/scenarios")
 def list_scenarios(_cu: dict = Depends(get_current_user)):
     return get_db_scenarios() or []
@@ -1527,6 +1544,7 @@ def delete_scenario_endpoint(scenario_id: str, _cu: dict = Depends(get_current_u
 
 # ── User management endpoints (admin only) ────────────────────────────────────
 
+# ===== User Management Routes =====
 @app.get("/users")
 def list_users(_cu: dict = Depends(require_admin)):
     return get_db_users() or []
@@ -1567,6 +1585,7 @@ def delete_user_endpoint(user_id: str, _cu: dict = Depends(require_admin)):
     delete_user(user_id)
 
 
+# ===== Run & Network Listing Routes =====
 @app.get("/runs/{run_id}/validation")
 def get_run_validation(run_id: str, _cu: dict = Depends(get_current_user)):
     runs = get_db_runs()
@@ -1671,6 +1690,7 @@ def delete_network_endpoint(network_id: str, _cu: dict = Depends(require_admin))
         raise HTTPException(status_code=404, detail="Network not found")
 
 
+# ===== SimBench Simulation & Result Routes =====
 def compute_violation_counts(out_dir: Path, has_trafo: bool, mode: str = "balanced") -> dict:
     """
     Scan the simulation CSVs and count per-asset violations using the same
@@ -2040,6 +2060,7 @@ def get_result_column(network_id: str, run_id: str, kind: str, col_name: str, _c
 
 # ── Edge device routes ────────────────────────────────────────────────────────
 
+# ===== Edge Device Routes =====
 class _DeviceRegisterRequest(BaseModel):
     id: str
     name: str
@@ -2152,6 +2173,7 @@ async def device_stream(websocket: WebSocket, device_id: str):
 
 # ── Edge node routes ──────────────────────────────────────────────────────────
 
+# ===== Edge Node / Flexibility Routes =====
 @app.get("/edge-nodes")
 def list_edge_nodes(_cu: dict = Depends(get_current_user)):
     """Return all edge nodes, each with their devices and latest P/Q readings."""
