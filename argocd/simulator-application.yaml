@@ -1,11 +1,11 @@
-# ArgoCD Application for the dtlab chart (frontend/backend/PostgreSQL).
+# ArgoCD Application for the simulator chart (frontend/backend/PostgreSQL).
 # Applies to the uop cluster (kubeconfig-uop-cluster), which runs its own
 # in-cluster ArgoCD (v3.5.2) in the `argocd` namespace.
 #
 # Pulls the packaged chart from Harbor (OCI) at a pinned version rather than
 # tracking the git repo's `main` branch — bump targetRevision here whenever
 # a new chart version is packaged and pushed to Harbor:
-#   helm package helm-chart/ && helm push dtlab-<ver>.tgz oci://harbor.cop-pilot.rid-intrasoft.eu/cluster3e-flexibility
+#   helm package helm-chart/ && helm push simulator-<ver>.tgz oci://harbor.cop-pilot.rid-intrasoft.eu/cluster3e-flexibility
 # (bump `version` in helm-chart/Chart.yaml first). This isn't automated in
 # CI yet — only the backend/frontend images are (.github/workflows/build-and-push.yaml).
 #
@@ -23,7 +23,7 @@ kind: Application
 metadata:
   finalizers:
   - resources-finalizer.argocd.argoproj.io
-  name: dtlab
+  name: simulator
   namespace: argocd
 spec:
   project: default
@@ -32,7 +32,7 @@ spec:
     namespace: uop
   source:
     repoURL: harbor.cop-pilot.rid-intrasoft.eu
-    chart: cluster3e-flexibility/dtlab
+    chart: cluster3e-flexibility/simulator
     targetRevision: "0.1.0"
     helm:
       valueFiles:

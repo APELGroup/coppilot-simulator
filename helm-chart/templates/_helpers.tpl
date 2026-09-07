@@ -1,8 +1,8 @@
 {{/*
-Release-scoped resource name prefix, e.g. "myrelease-dtlab". Lets multiple
+Release-scoped resource name prefix, e.g. "myrelease-simulator". Lets multiple
 releases of this chart coexist in the same namespace without colliding.
 */}}
-{{- define "dtlab.fullname" -}}
+{{- define "simulator.fullname" -}}
 {{- if contains .Chart.Name .Release.Name }}
 {{- .Release.Name | trunc 63 | trimSuffix "-" }}
 {{- else }}
@@ -13,7 +13,7 @@ releases of this chart coexist in the same namespace without colliding.
 {{/*
 Standard labels applied to every resource.
 */}}
-{{- define "dtlab.labels" -}}
+{{- define "simulator.labels" -}}
 app.kubernetes.io/name: {{ .Chart.Name }}
 app.kubernetes.io/instance: {{ .Release.Name }}
 app.kubernetes.io/managed-by: {{ .Release.Service }}
@@ -23,7 +23,7 @@ app.kubernetes.io/managed-by: {{ .Release.Service }}
 Selector labels for a given component (e.g. "backend", "frontend", "postgres").
 Must stay stable across releases since Deployment selectors are immutable.
 */}}
-{{- define "dtlab.selectorLabels" -}}
+{{- define "simulator.selectorLabels" -}}
 app.kubernetes.io/name: {{ .Chart.Name }}
 app.kubernetes.io/instance: {{ .Release.Name }}
 app.kubernetes.io/component: {{ .component }}

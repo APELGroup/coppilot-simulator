@@ -1,4 +1,4 @@
-# Default values for the dtlab chart.
+# Default values for the simulator chart.
 
 # Namespace all chart resources are deployed into. Must already exist (or be
 # created separately) — this chart has no Namespace resource of its own.

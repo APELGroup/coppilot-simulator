@@ -1,22 +1,22 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "dtlab.fullname" . }}-backend
+  name: {{ include "simulator.fullname" . }}-backend
   namespace: {{ .Values.namespace }}
   labels:
-    {{- include "dtlab.labels" . | nindent 4 }}
+    {{- include "simulator.labels" . | nindent 4 }}
     app.kubernetes.io/component: backend
 spec:
   replicas: 1
   selector:
     matchLabels:
-      {{- include "dtlab.selectorLabels" (dict "Chart" .Chart "Release" .Release "component" "backend") | nindent 6 }}
+      {{- include "simulator.selectorLabels" (dict "Chart" .Chart "Release" .Release "component" "backend") | nindent 6 }}
   strategy:
     type: Recreate
   template:
     metadata:
       labels:
-        {{- include "dtlab.selectorLabels" (dict "Chart" .Chart "Release" .Release "component" "backend") | nindent 8 }}
+        {{- include "simulator.selectorLabels" (dict "Chart" .Chart "Release" .Release "component" "backend") | nindent 8 }}
     spec:
       # Unlike Docker named volumes, a PVC does NOT auto-copy the image's
       # existing directory content on first mount — it just shadows
@@ -41,13 +41,13 @@ spec:
               fi
           volumeMounts:
             - mountPath: /mnt/data
-              name: dtlab-backend-data
+              name: simulator-backend-data
       containers:
         - envFrom:
             - configMapRef:
-                name: {{ include "dtlab.fullname" . }}-backend-env
+                name: {{ include "simulator.fullname" . }}-backend-env
             - secretRef:
-                name: {{ include "dtlab.fullname" . }}-secrets
+                name: {{ include "simulator.fullname" . }}-secrets
           image: "{{ .Values.backend.image.repository }}:{{ .Values.backend.image.tag }}"
           imagePullPolicy: {{ .Values.backend.image.pullPolicy }}
           name: backend
@@ -70,9 +70,9 @@ spec:
             timeoutSeconds: 5
           volumeMounts:
             - mountPath: /app/Backend/data
-              name: dtlab-backend-data
+              name: simulator-backend-data
       restartPolicy: Always
       volumes:
-        - name: dtlab-backend-data
+        - name: simulator-backend-data
           persistentVolumeClaim:
-            claimName: {{ include "dtlab.fullname" . }}-backend-data
+            claimName: {{ include "simulator.fullname" . }}-backend-data

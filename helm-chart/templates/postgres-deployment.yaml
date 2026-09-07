@@ -1,22 +1,22 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "dtlab.fullname" . }}-postgres
+  name: {{ include "simulator.fullname" . }}-postgres
   namespace: {{ .Values.namespace }}
   labels:
-    {{- include "dtlab.labels" . | nindent 4 }}
+    {{- include "simulator.labels" . | nindent 4 }}
     app.kubernetes.io/component: postgres
 spec:
   replicas: 1
   selector:
     matchLabels:
-      {{- include "dtlab.selectorLabels" (dict "Chart" .Chart "Release" .Release "component" "postgres") | nindent 6 }}
+      {{- include "simulator.selectorLabels" (dict "Chart" .Chart "Release" .Release "component" "postgres") | nindent 6 }}
   strategy:
     type: Recreate
   template:
     metadata:
       labels:
-        {{- include "dtlab.selectorLabels" (dict "Chart" .Chart "Release" .Release "component" "postgres") | nindent 8 }}
+        {{- include "simulator.selectorLabels" (dict "Chart" .Chart "Release" .Release "component" "postgres") | nindent 8 }}
     spec:
       containers:
         - env:
@@ -27,7 +27,7 @@ spec:
             - name: POSTGRES_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: {{ include "dtlab.fullname" . }}-secrets
+                  name: {{ include "simulator.fullname" . }}-secrets
                   key: POSTGRES_PASSWORD
           image: "{{ .Values.postgres.image }}"
           name: postgres
@@ -48,9 +48,9 @@ spec:
             timeoutSeconds: 5
           volumeMounts:
             - mountPath: /var/lib/postgresql/data
-              name: dtlab-postgres-data
+              name: simulator-postgres-data
       restartPolicy: Always
       volumes:
-        - name: dtlab-postgres-data
+        - name: simulator-postgres-data
           persistentVolumeClaim:
-            claimName: {{ include "dtlab.fullname" . }}-postgres-data
+            claimName: {{ include "simulator.fullname" . }}-postgres-data

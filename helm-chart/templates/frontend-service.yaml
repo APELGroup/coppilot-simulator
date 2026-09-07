@@ -1,10 +1,10 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ include "dtlab.fullname" . }}-frontend
+  name: {{ include "simulator.fullname" . }}-frontend
   namespace: {{ .Values.namespace }}
   labels:
-    {{- include "dtlab.labels" . | nindent 4 }}
+    {{- include "simulator.labels" . | nindent 4 }}
     app.kubernetes.io/component: frontend
 spec:
   type: NodePort
@@ -16,4 +16,4 @@ spec:
       targetPort: 3000
       nodePort: {{ .Values.frontend.service.nodePort }}
   selector:
-    {{- include "dtlab.selectorLabels" (dict "Chart" .Chart "Release" .Release "component" "frontend") | nindent 4 }}
+    {{- include "simulator.selectorLabels" (dict "Chart" .Chart "Release" .Release "component" "frontend") | nindent 4 }}

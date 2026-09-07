@@ -1,4 +1,4 @@
-# Values for deploying dtlab with images pulled from the COP-PILOT Harbor
+# Values for deploying simulator with images pulled from the COP-PILOT Harbor
 # OCI registry instead of the default local registry in values.yaml.
 #
 # NOTE: this only changes where images are pulled from — this chart has no
