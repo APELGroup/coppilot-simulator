@@ -15,6 +15,7 @@ import {
 import { Link } from "@tanstack/react-router";
 import {
   API_BASE,
+  resolveApiBaseUrl,
   convertOpenDSS, simulateOpenDSS, saveOpenDSSNetwork,
   type ConvertOpenDSSResult, type SimulateOpenDSSResult, type SaveOpenDSSResult,
   type ValidationPhase, type ValidationBusEntry, type ValidationLoadingEntry,
@@ -278,7 +279,7 @@ function ConversionResult({
             <div className="px-5 pt-4 pb-3 text-sm font-semibold shrink-0">Topology overview</div>
             <div className="relative w-full h-[600px]">
               <iframe
-                src={`${API_BASE}${result.plot_url}?v=${Date.now()}`}
+                src={`${resolveApiBaseUrl() || API_BASE}${result.plot_url}?v=${Date.now()}`}
                 title={`${result.network_name} topology`}
                 className="w-full h-full border-0 block"
               />

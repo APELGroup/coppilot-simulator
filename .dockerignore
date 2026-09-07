@@ -1,0 +1,12 @@
+.git
+.claude
+**/node_modules/
+**/.venv/
+**/venv/
+**/__pycache__/
+*.pyc
+*.log
+Backend/data/results/
+Conversion/Nando_final/results/
+Frontend/dist/
+Frontend/.output/

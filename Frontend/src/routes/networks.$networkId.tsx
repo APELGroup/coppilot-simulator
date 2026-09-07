@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import { AppShell, PageHeader, StatusBadge } from "@/components/app-shell";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { fetchSimbenchNetworks, API_BASE } from "@/lib/api";
+import { fetchSimbenchNetworks, API_BASE, resolveApiBaseUrl } from "@/lib/api";
 import { useNetworks, seedNetworks } from "@/lib/networks-store";
 import { ArrowLeft, Cable, Zap, Box, Plug, Play, Loader2 } from "lucide-react";
 import { useRole } from "@/hooks/use-role";
@@ -79,9 +79,13 @@ function NetworkDetail() {
     { label: "Loads",        value: n.loads,        icon: Plug, tone: "text-success" },
   ];
 
+  // resolveApiBaseUrl() computes the real per-deployment host from the
+  // current request on the server; API_BASE (window.__RUNTIME_CONFIG__) is
+  // only populated on the client. See results.tsx for the full rationale.
+  const apiBase = resolveApiBaseUrl() || API_BASE;
   // Append a cache-buster so the browser always fetches the latest plot HTML
   // instead of serving a stale version from its local cache.
-  const plotSrc = n.plot_url ? `${API_BASE}${n.plot_url}?v=${Date.now()}` : null;
+  const plotSrc = n.plot_url ? `${apiBase}${n.plot_url}?v=${Date.now()}` : null;
 
   return (
     <AppShell>
