@@ -12,3 +12,4 @@ nando/Nando_final/results/
 *.pyc
 *.log
 .~lock.*#
+helm-chart/*.tgz
