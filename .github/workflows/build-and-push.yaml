@@ -44,7 +44,7 @@ jobs:
           password: ${{ secrets.HARBOR_PASSWORD }}
       - uses: docker/build-push-action@v6
         with:
-          context: Backend
+          context: .
           file: Backend/Dockerfile
           platforms: linux/amd64,linux/arm64
           push: true
