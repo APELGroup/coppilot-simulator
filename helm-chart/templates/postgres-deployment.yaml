@@ -2,6 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: {{ include "dtlab.fullname" . }}-postgres
+  namespace: {{ .Values.namespace }}
   labels:
     {{- include "dtlab.labels" . | nindent 4 }}
     app.kubernetes.io/component: postgres

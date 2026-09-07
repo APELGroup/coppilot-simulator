@@ -1,4 +1,12 @@
-# Default values for the dtlab chart.
+# Values for deploying dtlab with images pulled from the COP-PILOT Harbor
+# OCI registry instead of the default local registry in values.yaml.
+#
+# NOTE: this only changes where images are pulled from — this chart has no
+# imagePullSecrets support in its templates. If
+# harbor.cop-pilot.rid-intrasoft.eu/cluster3e-flexibility is a private
+# project, the target namespace's default ServiceAccount (or a per-pod
+# pull secret) must already be configured to authenticate to Harbor before
+# installing with this file, or image pulls will fail with ImagePullBackOff.
 
 # Namespace all chart resources are deployed into. Must already exist (or be
 # created separately) — this chart has no Namespace resource of its own.
@@ -19,7 +27,7 @@ postgres:
 
 backend:
   image:
-    repository: 192.168.188.204:80/simulator/backend
+    repository: harbor.cop-pilot.rid-intrasoft.eu/cluster3e-flexibility/backend
     tag: "1.0"
     # The documented release workflow re-pushes the same tag on every
     # rebuild, so the default IfNotPresent would let nodes keep a stale
@@ -44,7 +52,7 @@ backend:
 
 frontend:
   image:
-    repository: 192.168.188.204:80/simulator/frontend
+    repository: harbor.cop-pilot.rid-intrasoft.eu/cluster3e-flexibility/frontend
     tag: "1.0"
     # See backend.image.pullPolicy's comment.
     pullPolicy: Always
