@@ -28,7 +28,7 @@ postgres:
 backend:
   image:
     repository: harbor.cop-pilot.rid-intrasoft.eu/cluster3e-flexibility/backend
-    tag: "1.0"
+    tag: "latest"
     # The documented release workflow re-pushes the same tag on every
     # rebuild, so the default IfNotPresent would let nodes keep a stale
     # cached image indefinitely.
@@ -53,7 +53,7 @@ backend:
 frontend:
   image:
     repository: harbor.cop-pilot.rid-intrasoft.eu/cluster3e-flexibility/frontend
-    tag: "1.0"
+    tag: "latest"
     # See backend.image.pullPolicy's comment.
     pullPolicy: Always
   service:
