@@ -55,9 +55,21 @@ npm run format     # Prettier
 
 ### Backend (`Backend/`)
 
-Single `main.py` FastAPI application. No sub-packages — all logic lives in the top-level files:
+Routes are split into `routers/` by domain; `main.py` is just app wiring (lifespan, CORS, static mount, `include_router()`):
 
-- **`main.py`** — all route handlers (~2400 lines). SimBench and OpenDSS network endpoints, simulation runs, auth, users, scenarios, edge devices, WebSocket telemetry. Routes are grouped under `# ===== ... =====` comment markers — run `grep -n '^# =====' Backend/main.py` for a table of contents.
+- **`main.py`** — `FastAPI()` app, `lifespan()` (DB init/seeding, in-memory device/edge-node registry preload), CORS, `/plots` static mount, registers all 8 routers.
+- **`routers/opendss.py`** — OpenDSS conversion, timeseries simulation, and power-flow routes (`/convert/opendss*`, `run-opendss`, `run-powerflow`, `pf-plot`, `pf-violations`).
+- **`routers/auth.py`** — `/auth/*` (login, register, me, change-password).
+- **`routers/scenarios.py`** — `/scenarios` CRUD.
+- **`routers/users.py`** — `/users` CRUD (admin only).
+- **`routers/networks.py`** — `/`, `/runs*`, `/networks*` listing/detail/delete.
+- **`routers/simulations.py`** — `/networks/{id}/run` (SimBench timeseries) and the result-query routes (`vm-pu`, `line-loading`, `trafo-loading`, `envelope`, `phases*`, `column*`).
+- **`routers/devices.py`** — edge device registration/telemetry/WebSocket stream (`/devices*`).
+- **`routers/edge_nodes.py`** — edge node listing, flexibility estimation, topology plot (`/edge-nodes*`).
+- **`schemas.py`** — all Pydantic request models.
+- **`shared_state.py`** — config constants (paths, thresholds, Nando/OpenDSS root) and the in-memory runtime dicts (`_devices`, `_edge_nodes`, `_telemetry`, `_ws_subs`) shared across routers — these are mutated in place, never reassigned, so importing them into multiple router modules keeps one shared object.
+- **`opendss_helpers.py`** — OpenDSS-domain helper functions (pipeline subprocess runner, network stats, topology plot generation, validation-metrics parsing, power-flow violation counting).
+- **`simulation_helpers.py`** — SimBench-domain helper functions (time-step/date validation, violation counting, result-file loading). Also used by `routers/opendss.py` where OpenDSS routes need the same violation-counting logic.
 - **`db.py`** — optional PostgreSQL via SQLAlchemy. Every function returns `None`/`False` when the DB is unreachable; the app then falls back to `data/networks.json` on disk. Models: `NetworkRecord`, `SimulationRun`, `ScenarioRecord`, `UserRecord`, `EdgeDevice`, `EdgeNode`, `TelemetryReading`, `ValidationMetrics`.
 - **`auth_utils.py`** — JWT creation/validation (`python-jose`), bcrypt password hashing, `get_current_user` / `require_admin` FastAPI dependencies.
 - **`generate_networks.py`** — Plotly topology rendering helpers (`style_traces`, `build_plot_html`, `COLORS`, `compute_min_height`).
