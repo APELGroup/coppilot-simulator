@@ -27,7 +27,7 @@ postgres:
 
 backend:
   image:
-    repository: harbor.cop-pilot.rid-intrasoft.eu/cluster3e-flexibility/backend
+    repository: harbor.cop-pilot.rid-intrasoft.eu/cluster3e-flexibility/simulator-backend
     tag: "latest"
     # The documented release workflow re-pushes the same tag on every
     # rebuild, so the default IfNotPresent would let nodes keep a stale
@@ -52,7 +52,7 @@ backend:
 
 frontend:
   image:
-    repository: harbor.cop-pilot.rid-intrasoft.eu/cluster3e-flexibility/frontend
+    repository: harbor.cop-pilot.rid-intrasoft.eu/cluster3e-flexibility/simulator-frontend
     tag: "latest"
     # See backend.image.pullPolicy's comment.
     pullPolicy: Always
