@@ -66,7 +66,7 @@ Single `main.py` FastAPI application. No sub-packages — all logic lives in the
 
 Simulation results are written to `Backend/data/results/{network_id}/{run_id}/` as Parquet files per timestep (subdirs `res_bus/`, `res_line/`, `res_trafo/`, and 3-phase equivalents `res_bus_3ph/` etc.).
 
-### Conversion Pipeline (`Conversion/Nando_final/`)
+### Conversion Pipeline (`Conversion/opendss_conversion/`)
 
 OpenDSS → pandapower conversion pipeline. Invoked **as subprocesses** from `main.py` (`_run_nando_step()`). The backend sets `NANDO_NETWORK=1|2|3|4` and optionally `NANDO_SELECTED_DAY` env vars before calling each script. The four networks are:
 
@@ -77,7 +77,7 @@ OpenDSS → pandapower conversion pipeline. Invoked **as subprocesses** from `ma
 | 3 | Urban_HPK11 |
 | 4 | Urban_CRE21 |
 
-Converted files land in `Conversion/Nando_final/dss_files/net_{N}_{Name}/` as `net_pp.xlsx` (balanced) or `net_pp_3ph_ready.json` (unbalanced).
+Converted files land in `Conversion/opendss_conversion/dss_files/net_{N}_{Name}/` as `net_pp.xlsx` (balanced) or `net_pp_3ph_ready.json` (unbalanced).
 
 ### Frontend (`Frontend/src/`)
 

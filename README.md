@@ -10,7 +10,7 @@ A web-based Digital Twin platform for power-network simulation using SimBench an
 DT/
 ├── Backend/        # FastAPI REST API + simulation engine
 ├── Frontend/       # React + Vite web application
-└── Conversion/     # OpenDSS → pandapower conversion pipeline (Nando_final)
+└── Conversion/     # OpenDSS → pandapower conversion pipeline (opendss_conversion)
 ```
 
 ---
@@ -132,7 +132,7 @@ Key packages:
 
 ## 4 — Conversion Pipeline
 
-The `Conversion/` folder contains the OpenDSS → pandapower conversion pipeline (`Nando_final`). It is invoked automatically by the backend when a user runs a conversion from the UI.
+The `Conversion/` folder contains the OpenDSS → pandapower conversion pipeline (`opendss_conversion`). It is invoked automatically by the backend when a user runs a conversion from the UI.
 
 No manual setup is required beyond the Backend dependencies.
 

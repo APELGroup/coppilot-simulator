@@ -96,8 +96,8 @@ _edge_nodes: dict[str, dict] = {}                             # node_id → {id,
 _telemetry: dict[str, deque] = defaultdict(lambda: deque(maxlen=100))  # device_id → readings
 _ws_subs: dict[str, set] = defaultdict(set)                  # device_id → active WebSockets
 
-# Path to the Conversion/Nando_final directory (sibling of Backend in the repo root)
-NANDO_ROOT = Path(__file__).parent.parent / "Conversion" / "Nando_final"
+# Path to the Conversion/opendss_conversion directory (sibling of Backend in the repo root)
+NANDO_ROOT = Path(__file__).parent.parent / "Conversion" / "opendss_conversion"
 
 # Full-year load profile arrays for OpenDSS networks (shape: (N_profiles, 365, 48))
 _RES_NPY = NANDO_ROOT / "excels" / "Res_load_data_30min_res.npy"

@@ -1,8 +1,8 @@
 # Build context must be the repo root, e.g.:
 #   docker build -f Backend/Dockerfile -t dtlab-backend .
 # This is required because the backend invokes the OpenDSS -> pandapower
-# conversion pipeline in ../Conversion/Nando_final as a subprocess
-# (see Backend/main.py: NANDO_ROOT = Path(__file__).parent.parent / "Conversion" / "Nando_final").
+# conversion pipeline in ../Conversion/opendss_conversion as a subprocess
+# (see Backend/main.py: NANDO_ROOT = Path(__file__).parent.parent / "Conversion" / "opendss_conversion").
 
 FROM python:3.10.11-slim AS builder
 

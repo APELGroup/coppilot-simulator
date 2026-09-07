@@ -11,3 +11,4 @@ nando/Nando_final/results/
 **/.pytest_cache/
 *.pyc
 *.log
+.~lock.*#
