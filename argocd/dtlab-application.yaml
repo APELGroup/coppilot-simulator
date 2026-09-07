@@ -1,0 +1,50 @@
+# ArgoCD Application for the dtlab chart (frontend/backend/PostgreSQL).
+# Applies to the uop cluster (kubeconfig-uop-cluster), which runs its own
+# in-cluster ArgoCD (v3.5.2) in the `argocd` namespace.
+#
+# Pulls the packaged chart from Harbor (OCI) at a pinned version rather than
+# tracking the git repo's `main` branch — bump targetRevision here whenever
+# a new chart version is packaged and pushed to Harbor:
+#   helm package helm-chart/ && helm push dtlab-<ver>.tgz oci://harbor.cop-pilot.rid-intrasoft.eu/cluster3e-flexibility
+# (bump `version` in helm-chart/Chart.yaml first). This isn't automated in
+# CI yet — only the backend/frontend images are (.github/workflows/build-and-push.yaml).
+#
+# IMPORTANT: repoURL must NOT include the oci:// scheme, and the Harbor
+# project path goes into `chart` alongside the chart name (not split across
+# repoURL+chart) — ArgoCD silently drops the chart name from the OCI
+# manifest lookup URL otherwise (fails with "response status code 400: Bad
+# Request" resolving the revision). See argoproj/argo-cd#25513 and
+# https://argo-cd.readthedocs.io/en/stable/user-guide/private-repositories/#helm.
+#
+# Uses values-coppilot.yaml bundled in the chart artifact (harbor-regcred /
+# equivalent pull auth must already be present for the `uop` namespace).
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  finalizers:
+  - resources-finalizer.argocd.argoproj.io
+  name: dtlab
+  namespace: argocd
+spec:
+  project: default
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: uop
+  source:
+    repoURL: harbor.cop-pilot.rid-intrasoft.eu
+    chart: cluster3e-flexibility/dtlab
+    targetRevision: "0.1.0"
+    helm:
+      valueFiles:
+      - values-coppilot.yaml
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+      allowEmpty: false
+    syncOptions:
+    - Validate=false
+    - CreateNamespace=true
+    - PrunePropagationPolicy=foreground
+    - PruneLast=true
+    - RespectIgnoreDifferences=true
