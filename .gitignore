@@ -13,3 +13,4 @@ nando/Nando_final/results/
 *.log
 .~lock.*#
 helm-chart/*.tgz
+argocd/secret.yaml

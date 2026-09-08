@@ -1,16 +1,20 @@
 # Values for deploying simulator with images pulled from the COP-PILOT Harbor
 # OCI registry instead of the default local registry in values.yaml.
 #
-# NOTE: this only changes where images are pulled from — this chart has no
-# imagePullSecrets support in its templates. If
 # harbor.cop-pilot.rid-intrasoft.eu/cluster3e-flexibility is a private
-# project, the target namespace's default ServiceAccount (or a per-pod
-# pull secret) must already be configured to authenticate to Harbor before
-# installing with this file, or image pulls will fail with ImagePullBackOff.
+# project, so a `harbor-regcred` docker-registry Secret must already exist
+# in the target namespace (see docs/... or `kubectl create secret
+# docker-registry harbor-regcred ...`) before installing with this file, or
+# image pulls will fail with ImagePullBackOff. This chart references it by
+# name below rather than creating it — see values.yaml's imagePullSecret
+# block for the ArgoCD-managed / chart-creates-its-own-secret alternative.
 
 # Namespace all chart resources are deployed into. Must already exist (or be
 # created separately) — this chart has no Namespace resource of its own.
 namespace: uop
+
+imagePullSecrets:
+  - name: harbor-regcred
 
 postgres:
   image: postgres:16

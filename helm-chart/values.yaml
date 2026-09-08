@@ -4,6 +4,23 @@
 # created separately) — this chart has no Namespace resource of its own.
 namespace: uop
 
+imagePullSecrets: []
+# Example:
+# imagePullSecrets:
+#   - name: harbor-regcred
+
+# Set create: true to have this chart create the pull secret itself instead
+# of requiring it to pre-exist (e.g. when an orchestrator like ArgoCD creates
+# this release into a namespace on the fly). username/password can be plain
+# values or argocd-vault-plugin placeholders (<path:secret/data/harbor#...>).
+imagePullSecret:
+  create: false
+  name: harbor-regcred
+  registry: ""
+  username: ""
+  password: ""
+  email: ""
+
 postgres:
   image: postgres:16
   user: simbench

@@ -18,6 +18,7 @@ spec:
       labels:
         {{- include "simulator.selectorLabels" (dict "Chart" .Chart "Release" .Release "component" "backend") | nindent 8 }}
     spec:
+      {{- include "simulator.imagePullSecrets" . | nindent 6 }}
       # Unlike Docker named volumes, a PVC does NOT auto-copy the image's
       # existing directory content on first mount — it just shadows
       # /app/Backend/data with an empty filesystem, hiding the seeded

@@ -16,6 +16,7 @@ spec:
       labels:
         {{- include "simulator.selectorLabels" (dict "Chart" .Chart "Release" .Release "component" "frontend") | nindent 8 }}
     spec:
+      {{- include "simulator.imagePullSecrets" . | nindent 6 }}
       containers:
         - image: "{{ .Values.frontend.image.repository }}:{{ .Values.frontend.image.tag }}"
           imagePullPolicy: {{ .Values.frontend.image.pullPolicy }}
