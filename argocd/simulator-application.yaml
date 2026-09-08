@@ -33,7 +33,7 @@ spec:
   source:
     repoURL: harbor.cop-pilot.rid-intrasoft.eu
     chart: cluster3e-flexibility/simulator
-    targetRevision: "0.1.0"
+    targetRevision: "*" #"0.2.0"
     helm:
       valueFiles:
       - values-coppilot.yaml
